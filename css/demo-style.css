@@ -1,0 +1,57 @@
+
+h2 {
+  font-size:1.8em;
+  margin-bottom:1em;
+  line-height: 100%;
+}
+
+h4 {
+  font-size:1.3em;
+  margin-bottom:0.8em;
+}
+
+#leftConnector, #rightConnector {
+  width:48%;
+  margin:0 1%;
+  float:left;
+  padding-bottom:3.8333em;
+}
+
+#centerContainer {
+  padding-bottom:3.8333em; 
+  margin:0 1%;
+}
+
+
+.List.ControlList {
+  margin-bottom:1em;
+}
+
+
+.Console {
+  border:2px solid #d2d2d2;
+  padding:10px;
+  font-family: "Courier", Helvetiva, Arial;
+  color:#000;
+  font-size:12px;
+  height:100px;
+  max-height: 600px;
+  overflow-y:scroll;
+}
+
+
+
+
+.State {
+  color:#fff;
+  display:inline-block;
+  padding:0 4px;
+}
+
+.State.StateInactive, .State.StateNull {
+  background-color:#DC2525;
+}
+
+.State.StateActive {
+  background-color:#2E9C2F;
+}
