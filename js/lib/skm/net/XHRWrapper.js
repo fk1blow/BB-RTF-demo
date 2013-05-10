@@ -15,7 +15,7 @@ var Logger = SKMLogger.create();
 var DefaultLibraryWrapper = window.jQuery || null;
 
 
-// The XHR wrapper that will use
+// The XHR wrapper that will be used.
 // Usually, this wrapper will be for jQuery's $.ajax method
 // Direct reference to the Library that will provide the ajax api
 var LibraryConfig = {
@@ -27,25 +27,37 @@ var LibraryConfig = {
 
 
 var XHRMessageDelegates = {
-	handleOnComplete: function() {
-		Logger.info('XHRWrapper.handleOnComplete');
-		this._expectedClose = false;
-		this.fire('complete');
-	},
-
 	handleOnSuccess: function(msg) {
 		Logger.info('XHRWrapper.handleOnSuccess', msg);
 		this._expectedClose = false;
 		this.fire('success', msg);
 	},
+	
+	handleOnComplete: function(ajaxObject, status) {
+		if ( ajaxObject.status == 405 ) {
+			//should trigger next sequence
+			this.fire('denied');
+		} else if ( ajaxObject.status != 200 && ajaxObject.statusText != 'abort' ) {
+			// interrupted by networkd/hardware stack
+			this.fire('stopped');
+		} else if ( ajaxObject.statusText == 'abort' ) {
+			// manually aborted by user
+			// shouldn't fire anything
+			this.fire('aborted');
+		}
+	},
 
-	handleOnError: function(err) {
+	/*
+	 handleOnError: function(err) {
 		if ( ! this._expectedClose ) {
 			Logger.info('XHRWrapper.handleOnError');
 			this._expectedClose = false;
 			this.fire('error', err);
+		} else {
+			this.fire('closed');
 		}
-	}
+	 }
+	 */
 }
 
 
@@ -70,6 +82,7 @@ var XHRWrapper = SKMObject.extend(Subscribable, XHRMessageDelegates, {
 
 	initialize: function() {
 		Logger.debug('%cnew XHRWrapper', 'color:#A2A2A2');
+		// @todo use a getter for the wrapper
 		this._wrapper = LibraryConfig.wrapper || DefaultLibraryWrapper;
 		this._request = null;
 	},
@@ -115,6 +128,7 @@ var XHRWrapper = SKMObject.extend(Subscribable, XHRMessageDelegates, {
 	 * callback or not - [this._expectedClose]
 	 */
 	abortRequest: function(triggersError) {
+		Logger.info('XHRWrapper.abortRequest');
 		// if triggers error is true, it will trigger the error event
 		if ( triggersError === true )
 			this._expectedClose = false;
@@ -140,7 +154,7 @@ var XHRWrapper = SKMObject.extend(Subscribable, XHRMessageDelegates, {
 
 		// Abort the request if there is one in progress
 		this.abortRequest();
-
+		
 		this._request = this._wrapper.ajax({
 			url: this.url,
 
@@ -157,15 +171,14 @@ var XHRWrapper = SKMObject.extend(Subscribable, XHRMessageDelegates, {
 			// Data sent to the server
 			data: messageData,
 
-			error: function (err) {
+			/*error: function (err) {
 				this.handleOnError(err);
+			},*/
+			
+			complete: function(ctx, statusText) {
+				this.handleOnComplete(ctx, statusText);
 			},
-
-			complete: function(msg) {
-				this._resetRequestObject();
-				this.handleOnComplete(msg);
-			},
-
+			
 			success: function(msg) {
 				this.handleOnSuccess(msg);
 			}
@@ -173,16 +186,17 @@ var XHRWrapper = SKMObject.extend(Subscribable, XHRMessageDelegates, {
 	},
 
 	_resetRequestObject: function() {
-		if ( this._request !== null )
+		if ( this._request !== null ) {
 			this._request = null;
+		}
 	}
 });
 
 
-// return {
-// 	Config: LibraryConfig,
-// 	Wrapper: XHRWrapper
-// };
+/*return {
+	Config: LibraryConfig,
+	Wrapper: XHRWrapper
+};*/
 
 
 /**

@@ -286,19 +286,21 @@ var Manager = SKMObject.extend(Subscribable, {
 
 
   _attachConnectorHandlers: function(connector) {
-    /*connector.on('all', function() { cl('all > ', arguments) });
-    return;*/
+    connector.on('all', function() { console.log('cm all > ', arguments) });
+   // return;
   
     /** transport events  */
     connector.on('transport:ready', function() {
       this.fire('ready');
     }, this);
 
+    // not aplicable to WSConnector
     connector.on('transport:interrupted', function() {
       this.fire('interrupted');
     }, this);
 
     // stop connectors
+    // nothing more to do
     connector.on('transport:closed', function() {
       this.fire('closed');
       this._stopCurrentSequence();
@@ -318,6 +320,7 @@ var Manager = SKMObject.extend(Subscribable, {
     }, this);
 
     // stop connectors
+    // nothing more to do
     connector.on('api:error', function(message) {
       this.fire('error', message);
       this._stopCurrentSequence();

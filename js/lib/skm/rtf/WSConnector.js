@@ -90,6 +90,12 @@ var EventsDelegates = {
     this._makeReconnectAttempt();
   },
 
+  /**
+   * Handled when an opened link/connection has been interrupted
+   *
+   * @description besides fireing an event, it will try
+   * to make another reconnect attempt
+   */
   handleConnectionInterrupted: function() {
     Logger.info('Connector.handleConnectionInterrupted');
     this.fire('transport:interrupted');
@@ -99,7 +105,7 @@ var EventsDelegates = {
 
 
 var WSConnector = BaseConnector.extend(EventsDelegates, {
-  name: 'WebSocket',
+  name: 'WS',
   
   beginUpdate: function() {
     this._ensureTransportCreated(WSWrapper)._buildTransportUrl();
@@ -114,6 +120,7 @@ var WSConnector = BaseConnector.extend(EventsDelegates, {
     Logger.info('WSConnector.endUpdate');
     // disconnect and remove events
     this.transport.disconnect();
+    this._stopReconnectAttempts();
     return this;
   },
 
@@ -127,11 +134,6 @@ var WSConnector = BaseConnector.extend(EventsDelegates, {
     this.transport.send(message);
   },
 
-  /*
-    - define the list of events that a connector can trigger
-    - par ex, if the link is being interrupted, make sure you notify the manager
-    that an error has ocured - this error will be sent to the widget
-  */
   addTransportListeners: function() {
     /*this.transport.on('all', function() { cl('transport < ', arguments); });
     return;*/
@@ -149,8 +151,8 @@ var WSConnector = BaseConnector.extend(EventsDelegates, {
     this.transport.on('implementation:missing',
       this.handleImplementationMissing, this);
 
+    // WILL TRY TO RECONNECT !!!!!!!!!!
     // Try to reconnect when "stopped", "timeout" or "interrupted"
-    // will reconnect
     // add special handler for [link:interrupted] - should notifiy the user
     this.transport.on('connecting:stopped connecting:timeout',
       this.handleConnectionStopped, this);

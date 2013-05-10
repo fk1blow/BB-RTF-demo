@@ -104,6 +104,11 @@ var EventsDelegates = {
       // If no param given, take the current batchId - this.batchId
       this.handleUpdateBatchId(this._batchId); 
     }
+    // if it reaches here and it has an 'error' key, it means
+    // an xhr connection has received an error message from server api
+    else if ( 'error' in data ) {
+      this.fire('error', data);
+    }
     else {
       Logger.error('RTFApi.handleApiMessage, invalid data ', data);
     }

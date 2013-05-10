@@ -130,6 +130,7 @@ var NativeWebSocketHandler = SKMObject.extend(Subscribable, {
     this._timerAutoDisconnect.stop();
 
     // If the socket connection is closed by the server
+    // or it's aborted by the users
     if ( event.wasClean ) {
       Logger.debug('NativeWebSocketHandler : connection closed');
       this.fire('link:closed', event.reason);

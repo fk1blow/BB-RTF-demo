@@ -1,15 +1,14 @@
   
 // Application
 
-define(['skm/rtf/RTFApi',
-  'controllers/MainController'],
-  function(RTF, MainController)
+define(['skm/rtf/RTFApi'],
+  function(RTF)
 {
 'use strict';
 
 
 
-var mc = window.mc = MainController;
+// var mc = window.mc = MainController;
 
 var host = 'dragos.betonvalue.com';
 
@@ -18,8 +17,8 @@ var host = 'dragos.betonvalue.com';
   Sequence
  */
 
-RTF.Config.Sequence = ['WebSocket', 'XHR']//.reverse();
-// RTF.Config.Sequence = ['WebSocket'];
+// RTF.Config.Sequence = ['WebSocket', 'XHR'].reverse();
+RTF.Config.Sequence = ['WebSocket'];
 // RTF.Config.Sequence = ['XHR'];
 
 
@@ -61,9 +60,9 @@ rtf.on('message:nextLiveMatches', function(updatesObj) {
 });
 
 
-rtf.on('all', function() {
-  cl('rtf > ', arguments);
-});
+// rtf.on('all', function() {
+//   cl('rtf > ', arguments);
+// });
 
 
 /*rtf.on('error:nextLiveMatches', function(updatesObj) {
@@ -87,17 +86,17 @@ rtf.on('connector:closed', function() {
 
 
 // Adding a Channel
-/*rtf.addChannel({
+rtf.addChannel({
   name: 'nextLiveMatches',
   params: { matches: 10, live: true }
-});*/
+});
 
 
 
 // rtf.startUpdates();
 
 
-mc.init();
+// mc.init();
 
 
 });

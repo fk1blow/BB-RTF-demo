@@ -13,13 +13,6 @@ define(['skm/k/Object',
 var Logger = SKMLogger.create();
 
 
-var ConnectorErrors = {
-  INACTIVE: 'Innactive connection',
-  LIST_TO_BIG: 'Confirmation Message Sent list is too big',
-  READY_LIST_TO_BIG: 'Ready To send Message list is too big'
-};
-
-
 var EventsDelegates = {
   /**
    * Handles a message received from server api
@@ -35,34 +28,48 @@ var EventsDelegates = {
   },
 
   /**
-   * Handles xhr connection error
-   *
-   * @description triggered when the transport cannot
-   * connect to the host url or when the server
-   * closes a connection giving a reason as the "405" status code
-   * 
-   * @param  {[type]} err JSON message representing the reason
+   * Handled when the reconnect attemps has reached maximum attempts
    */
+  handleMaxReconnectAttemptsReached: function() {
+    Logger.info('XHRConnector.handleMaxReconnectAttemptsReached');
+    this.fire('transport:error');
+  },
+  
+  /**
+   * Handled when the xhr connection is refused by server api
+   */
+  handleConnectionDenied: function() {
+    Logger.info('XHRConnector.handleConnectionDenied');
+    this.fire('transport:error');
+  },
+
+  /*
   handleError: function(err) {
     Logger.info('Connector.handleError');
     // If server triggers errors
     if ( err.status == 405 ) {
       this.fire('api:error', err.responseText);
     } else {
-      this.handleConnectingStopped();
+      this.handleConnectionStopped();
     }
-  },
-
+  },*/
+  
   /**
-   * Handled while trying to establish a link
-   *
-   * @description this handler is called whenever the websocket wrapper
-   * tries to establish a connection but fails to do that.
-   * It cand fail if the wrapper auto-disconnects the attemp,
-   * or if the native wrapper triggers the close event.
+   * Handled when the xhr connection is aborted by the user
    */
-  handleConnectingStopped: function() {
-    Logger.info('Connector.handleConnectingStopped');
+  handleConnectionAborted: function() {
+    Logger.info('XHRConnector.handleConnectionAborted');
+    this.fire('transport:closed');
+  },
+  
+  /**
+   * Handled when the connection has been stopped
+   * 
+   * @descroption usually, when the network fails or anything that,
+   * can prematurely close a connection
+   */
+  handleConnectionStopped: function() {
+    Logger.info('XHRConnector.handleConnectionStopped');
     this._makeReconnectAttempt();
   }
 };
@@ -73,30 +80,34 @@ var XHRConnector = BaseConnector.extend(EventsDelegates, {
 
   beginUpdate: function() {
     this._ensureTransportCreated(XHRWrapper)._buildTransportUrl();
-    Logger.info('Connector.beginUpdate');
-    Logger.debug('Connector : transport url :', this.transport.url);
-    // because xhr is ready after being instantiated
-    // this.fire('connector:ready');
-    this.fire('api:ready');
+    Logger.info('XHRConnector.beginUpdate');
+    Logger.debug('XHRConnector : transport url :', this.transport.url);
+    // because xhr is ready, right after being instantiated
+    this.fire('transport:ready');
     return this;
   },
 
   endUpdate: function() {
-    Logger.info('Connector.endUpdate');
+    Logger.info('XHRConnector.endUpdate');
     // disconnect and remove events
     this.transport.abortRequest();
     return this;
   },
 
   sendMessage: function(message) {
-    Logger.debug('%cConnector.sendMessage : ', 'color:green', message);
+    Logger.debug('%cXHRConnector : sending message : ', 'color:green', message);
     this.transport.sendMessage({ message: message });
   },
 
   addTransportListeners: function() {
     this.transport
-      .on('error', this.handleError, this)
+      .on('aborted', this.handleConnectionAborted, this)
+      .on('stopped', this.handleConnectionStopped, this)
+      .on('denied', this.handleConnectionDenied, this)
       .on('success', this.handleReceivedMessage, this);
+
+      /** everything handled on complete */
+      //.on('error', this.handleError, this)
     return this;
   }
 });

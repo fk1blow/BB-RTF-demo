@@ -3,8 +3,9 @@
 
 define(['skm/k/Object',
   'skm/util/Logger',
+  'skm/util/Timer',
   'skm/util/Subscribable'],
-  function(SKMObject, SKMLogger, Subscribable)
+  function(SKMObject, SKMLogger, SKMTimer, Subscribable)
 {
 'use strict';
 
@@ -62,9 +63,17 @@ var BaseConnector = SKMObject.extend(Subscribable, {
    */
   urlParamModel: null,
 
+  _reconnectTimer: null,
+
   _currentAttempt: 1,
 
   _isReconnecting: false,
+
+  /*initialize: function() {
+    this._reconnectTimer = SKMTimer.create({
+      tickInterval:
+    });
+  },*/
 
   /**
    * Removes transport listeners
@@ -145,9 +154,13 @@ var BaseConnector = SKMObject.extend(Subscribable, {
       Logger.debug('Connector : will make attempt in', reconnectDelay, 'ms');
       // After delay, call being update and increment current attempt
       
-      setTimeout(function() {
+      this._reconnectTimer = setTimeout(function() {
         Logger.debug('-------------------------------------------');
         Logger.debug('Connector : attempt #', that._currentAttempt);
+
+        // kill current timer
+        that._reconnectTimer = null;
+
         // is reconnecting and increment current attempt
         that._isReconnecting = true;
         that._currentAttempt += 1;
@@ -161,6 +174,15 @@ var BaseConnector = SKMObject.extend(Subscribable, {
       this._isReconnecting = false;
       this._currentAttempt = 1;
       this.handleMaxReconnectAttemptsReached();
+    }
+  },
+
+  _stopReconnectAttempts: function() {
+    if ( this._reconnectTimer ) {
+      clearTimeout(this._reconnectTimer);
+    } else {
+      Logger.debug('Connector : unable to stop',
+        'reconnect attempts for null timer');
     }
   }
 });

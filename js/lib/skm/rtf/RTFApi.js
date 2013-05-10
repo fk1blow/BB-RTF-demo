@@ -1,4 +1,5 @@
-// RTF Api Manager implementation
+
+// RTF Api implementation
 
 define(['skm/k/Object',
   'skm/util/Logger',
