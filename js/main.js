@@ -9,7 +9,7 @@ requirejs.config({
     // "templates": "app/templates",
     "models": "app/models",
 
-    "skm": "lib/skm"
+    "skm": "http://10.0.3.98:82/SKeeM/js/lib/skm/"
   }
 });
 

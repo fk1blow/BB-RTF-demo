@@ -1,15 +1,14 @@
   
 // Application
 
-define(['skm/rtf/RTFApi'],
-  function(RTF)
+define(['skm/rtf/RTFApi', 'controllers/MainController'],
+  function(RTF, MainController)
 {
 'use strict';
 
 
 
-// var mc = window.mc = MainController;
-
+var mc = window.mc = MainController;
 var host = 'dragos.betonvalue.com';
 
 
@@ -28,7 +27,7 @@ RTF.Config.Sequence = ['WebSocket'];
 
 RTF.Config.Connectors.WebSocket.url = 'ws://' + (host || window.location.host) + '/rtfws';
 // RTF.Config.Connectors.WebSocket.url = 'ws://stage.betonvalue.com/rtfws';
-RTF.Config.Connectors.WebSocket.maxReconnectAttempts = 3;
+RTF.Config.Connectors.WebSocket.maxReconnectAttempts = 2;
 
 
 /*
@@ -86,17 +85,17 @@ rtf.on('connector:closed', function() {
 
 
 // Adding a Channel
-rtf.addChannel({
+/*rtf.addChannel({
   name: 'nextLiveMatches',
   params: { matches: 10, live: true }
-});
+});*/
 
 
 
-// rtf.startUpdates();
+rtf.startUpdates();
 
 
-// mc.init();
+mc.init();
 
 
 });
