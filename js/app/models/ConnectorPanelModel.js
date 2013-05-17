@@ -14,6 +14,7 @@ var Logger = SKMLogger.create();
 var ConnectorPanelModel = Backbone.Model.extend({
   defaults: {
     name: 'subscription',
+    active: false,
     params: null
   }
 });

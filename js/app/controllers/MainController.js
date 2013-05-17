@@ -17,26 +17,26 @@ var Logger = SKMLogger.create();
 
 
 // models
-var globalPanel;
-var leftConnectorPanel;
-var rightConnectorPanel;
+var globalPanelModel;
+var leftConnectorModel;
+var rightConnectorModel;
 
 
 // views
-var mainPanelContainer;
-var leftPanelConnector;
-var rightPanelConnector;
+var mainPanelView;
+var leftPanelView; // @todo change to [leftConnectorView]
+var rightPanelView;
 
 
 var MainController = {
   init: function() {
-    globalPanel = new GlobalPanelModel();
+    globalPanelModel = new GlobalPanelModel();
     
-    leftConnectorPanel = new ConnectorPanelModel({
+    leftConnectorModel = new ConnectorPanelModel({
       name: 'nextLiveMatches'
     });
 
-    rightConnectorPanel = new ConnectorPanelModel({
+    rightConnectorModel = new ConnectorPanelModel({
       name: 'testChannel'
     });
 
@@ -46,19 +46,26 @@ var MainController = {
 
     /** global transport events */
     rtf.on('sequence:complete closed interrupted', function() {
-      globalPanel.set('isUpdating', false);
-      globalPanel.set('activeConnectorName', null);
+      globalPanelModel.set('isUpdating', false);
+      globalPanelModel.set('activeConnectorName', null);
+    });
+
+    rtf.on('sequence:complete', function() {
+      globalPanelModel.set('sequence', 'complete');
+    });
+    rtf.on('sequence:switching', function() {
+      globalPanelModel.set('sequence', 'switching');
     });
 
     rtf.on('ready', function() {
-      globalPanel.set('isUpdating', true);
-      globalPanel.set('activeConnectorName',
+      globalPanelModel.set('isUpdating', true);
+      globalPanelModel.set('activeConnectorName',
         rtf.connectorsManager.getActiveConnector().name);
     });
   },
 
   _showDefaultSequence: function() {
-    globalPanel.set('defaultSequence', window.rtfapi.Config.Sequence);
+    globalPanelModel.set('defaultSequence', window.rtfapi.Config.Sequence);
   },
 
 
@@ -68,53 +75,63 @@ var MainController = {
 
 
   _buildViews: function() {
-    mainPanelContainer = new GlobalPanelView({ model: globalPanel });
+    mainPanelView = new GlobalPanelView({ model: globalPanelModel });
 
-    /** main panel container handlers */
-    mainPanelContainer.on('start:updates', function() {
-      rtf.startUpdates();
-    });
-    mainPanelContainer.on('stop:updates', function() {
-      rtf.stopUpdates();
-    });
-    mainPanelContainer.on('shutdown:updates', function() {
-      rtf.shutdown();
-    });
-    mainPanelContainer.on('switch:connectors', function() {
-      rtf.switchToNextConnector();
-    });
+    // main panel view event handlers
+    this._addMainPanelHandlers();
     
     /** left and right panels views */
-    leftPanelConnector = new ConnectorPanelView({
+    leftPanelView = new ConnectorPanelView({
       el: $('#leftConnector'),
-      model: leftConnectorPanel
+      model: leftConnectorModel
     });
-    rightPanelConnector = new ConnectorPanelView({
+    rightPanelView = new ConnectorPanelView({
       el: $('#rightConnector'),
-      model: rightConnectorPanel
+      model: rightConnectorModel
     });
 
     this._addConnectorPanelsHandlers();
   },
 
   _addMainPanelHandlers: function() {
-   
+    /** main panel container handlers */
+    mainPanelView
+      .on('start:updates', function() {
+        rtf.startUpdates();
+      })
+      .on('stop:updates', function() {
+        rtf.stopUpdates();
+      })
+      .on('shutdown:updates', function() {
+        rtf.shutdown();
+      })
+      .on('switch:connectors', function() {
+        rtf.switchToNextConnector();
+      });
   },
 
    // sa se faca active, cand primeste subscription confirmation
   _addConnectorPanelsHandlers: function() {
     var panelModel = null;
 
-    _.each([leftPanelConnector, rightPanelConnector], function(panelView) {
+    _.each([leftPanelView, rightPanelView], function(panelView) {
       panelModel = panelView.model.get('name');
 
+
       /** confirm, infirm */
+
       rtf.on('confirmed:' + panelModel, function(state) {
         panelView.handleSubscriptionConfirmation();
       });
       rtf.on('infirmed:' + panelModel, function(state) {
         panelView.handleSubscriptionInfirmation();
       });
+
+
+      /** messages */
+
+      rtf.on('message:' + panelModel, panelView.handleMessage);
+
 
       /** channel activation */
       panelView.on('activate:channel', function(channel) {

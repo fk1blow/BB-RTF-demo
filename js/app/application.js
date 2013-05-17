@@ -16,8 +16,8 @@ var host = 'dragos.betonvalue.com';
   Sequence
  */
 
-// RTF.Config.Sequence = ['WebSocket', 'XHR'].reverse();
-RTF.Config.Sequence = ['WebSocket'];
+RTF.Config.Sequence = ['WebSocket', 'XHR']//.reverse();
+// RTF.Config.Sequence = ['WebSocket'];
 // RTF.Config.Sequence = ['XHR'];
 
 
@@ -27,7 +27,7 @@ RTF.Config.Sequence = ['WebSocket'];
 
 RTF.Config.Connectors.WebSocket.url = 'ws://' + (host || window.location.host) + '/rtfws';
 // RTF.Config.Connectors.WebSocket.url = 'ws://stage.betonvalue.com/rtfws';
-RTF.Config.Connectors.WebSocket.maxReconnectAttempts = 2;
+RTF.Config.Connectors.WebSocket.maxReconnectAttempts = 5;
 
 
 /*
@@ -35,7 +35,7 @@ RTF.Config.Connectors.WebSocket.maxReconnectAttempts = 2;
  */
 
 RTF.Config.Connectors.XHR.url = 'http://' + window.location.host + '/rtfajax';
-RTF.Config.Connectors.XHR.maxReconnectAttempts = 5;
+RTF.Config.Connectors.XHR.maxReconnectAttempts = 1;
 
 
 /*
@@ -46,7 +46,7 @@ window.rtfapi = RTF;
 var rtf = window.rtf = RTF.Api.getInstance();
 rtf.addUrlParameter('clientId', (new Date).getTime());
 // rtf.addUrlParameter('jSessionId', jsID);
-rtf.addUrlParameter('jSessionId', '0A4F2B41AC405DAF47DABBAA86F15469');
+rtf.addUrlParameter('jSessionId', 'F4A40FE92B6238D806B865679BB5368A');
 
 
 rtf.on('message:nextLiveMatches', function(updatesObj) {
@@ -59,28 +59,15 @@ rtf.on('message:nextLiveMatches', function(updatesObj) {
 });
 
 
-// rtf.on('all', function() {
-//   cl('rtf > ', arguments);
-// });
+rtf.on('all', function() {
+  cl('%crtf > ', 'color:red; font-weight:bold;', arguments);
+});
 
 
 /*rtf.on('error:nextLiveMatches', function(updatesObj) {
   console.log('%cmessage:error', 'color:red', updatesObj);
 });
 */
-
-// add [connector] param, an instance of Connector
-// to read and set the model's connectorType string
-/*rtf.on('connector:activated', function() {
-  mc.connectorsAreActivated()
-})*/
-/*rtf.on('connector:deactivated', function() {
-  cl('connector deactivated... for some reason')
-});
-
-rtf.on('connector:closed', function() {
-  console.log('connector closed....');
-});*/
 
 
 
@@ -92,7 +79,7 @@ rtf.on('connector:closed', function() {
 
 
 
-rtf.startUpdates();
+// rtf.startUpdates();
 
 
 mc.init();
