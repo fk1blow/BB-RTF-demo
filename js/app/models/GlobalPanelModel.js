@@ -16,7 +16,9 @@ var GlobalPanelModel = Backbone.Model.extend({
     defaultSequence: [],
     activeConnectorName: null, // string
     isUpdating: false,
-    sequence: null
+    sequence: null,
+    reconnecting: false,
+    activeConnectorUrl: null
   }
 });
 

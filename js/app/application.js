@@ -27,7 +27,7 @@ RTF.Config.Sequence = ['WebSocket', 'XHR']//.reverse();
 
 RTF.Config.Connectors.WebSocket.url = 'ws://' + (host || window.location.host) + '/rtfws';
 // RTF.Config.Connectors.WebSocket.url = 'ws://stage.betonvalue.com/rtfws';
-RTF.Config.Connectors.WebSocket.maxReconnectAttempts = 5;
+RTF.Config.Connectors.WebSocket.maxReconnectAttempts = 1;
 
 
 /*

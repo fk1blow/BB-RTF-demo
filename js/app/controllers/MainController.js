@@ -48,19 +48,28 @@ var MainController = {
     rtf.on('sequence:complete closed interrupted', function() {
       globalPanelModel.set('isUpdating', false);
       globalPanelModel.set('activeConnectorName', null);
+      globalPanelModel.set('reconnecting', false);
     });
 
     rtf.on('sequence:complete', function() {
       globalPanelModel.set('sequence', 'complete');
     });
+
     rtf.on('sequence:switching', function() {
       globalPanelModel.set('sequence', 'switching');
+      globalPanelModel.set('reconnecting', false);
+    });
+
+    rtf.on('reconnecting', function() {
+      globalPanelModel.set('reconnecting', true);
     });
 
     rtf.on('ready', function() {
       globalPanelModel.set('isUpdating', true);
       globalPanelModel.set('activeConnectorName',
         rtf.connectorsManager.getActiveConnector().name);
+      globalPanelModel.set('activeConnectorUrl',
+        rtf.connectorsManager.getActiveConnector().transport.url);
     });
   },
 

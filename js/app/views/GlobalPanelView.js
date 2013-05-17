@@ -42,7 +42,15 @@ var GlobalPanelView = Backbone.View.extend({
     }, this);
 
     this.model.on('change:sequence', function() {
-      this.consoleView.printLine("connectors sequence changed to : ", arguments[1]);
+      this.consoleView.printLine("sequence : ", arguments[1]);
+    }, this);
+
+    this.model.on('change:reconnecting', function() {
+      this.consoleView.printLine("reconnecting : ", arguments[1]);
+    }, this);
+
+    this.model.on('change:activeConnectorUrl', function() {
+      this.consoleView.printLine("connected to : ", arguments[1]);
     }, this);
 
     this.consoleView = new ConsoleView({ el: this.$el.find('.Console') });
