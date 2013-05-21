@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!--[if lt IE 9 ]><html class="no-js ie ie678 " lang="en"><![endif]-->
+<!--[if gte IE 9 ]><html class="no-js ie " lang="en"><![endif]-->
+<!--[if !(IE)]><!--><html class="no-js " lang="en"><!--<![endif]-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title></title>
+<meta name="Description" content="" />
+<meta name="Keywords" content=""/>
+<meta name="Application-Name" content="BetOnvalue" />
+<meta name="Author" content="http://www.betonvalue.com" />
+<meta name="Robots" content="all" />
+<meta name="Viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="apple-touch-icon" href="http://gfxnew.betonvalue.com/apple-touch-icon-bov.png" />
+<link rel="apple-touch-icon-precomposed" href="http://gfxnew.betonvalue.com/apple-touch-icon-57x57-bov-precomposed.png" media="screen and (resolution: 163dpi)" /><link rel="apple-touch-icon-precomposed" href="http://gfxnew.betonvalue.com/apple-touch-icon-72x72-bov-precomposed.png" media="screen and (resolution: 132dpi)" /><link rel="apple-touch-icon-precomposed" href="http://gfxnew.betonvalue.com/apple-touch-icon-114x114-bov-precomposed.png" media="screen and (resolution: 326dpi)" /><link rel="apple-touch-startup-image" href="http://gfxnew.betonvalue.com/startup-iphone-bov.png" media="only screen and (max-device-width : 480px)" /><link rel="apple-touch-startup-image" href="http://gfxnew.betonvalue.com/startup-bov.png" media="only screen and (min-device-width : 481px) and (max-device-width : 1024px) and (orientation : portrait)" /><link rel="apple-touch-startup-image" href="http://gfxnew.betonvalue.com/startup-ipad-landscape-bov.png" media="only screen and (min-device-width : 481px) and (max-device-width : 1024px) and (orientation : landscape)" /><link rel="icon" href="http://gfxnew.betonvalue.com/favicon-32-bov.png" sizes="32x32" />
+<link rel="icon" href="http://gfxnew.betonvalue.com/favicon-48-bov.png" sizes="48x48"/>
+<link rel="shortcut icon" href="http://gfxnew.betonvalue.com/favicon-bov.ico" />
+<link rel="stylesheet" type="text/css" href="http://betbrain.com/new/css/style.css" />
+<link rel="stylesheet" type="text/css" href="css/demo-style.css" />
+</head>
+<body class="">
+
+
+<div id="NextLiveMatchesRTF"></div>
+
+
+<div id="framework">
+    <div id="centerContainer" class="Clear">
+        <h2>RTF configuration</h2>
+        
+        <div style="float:left;">
+            <h4>Controls</h4>
+            <ul id="mainControls" class="List ControlList">
+                <li><a id="startUpdates" title="starts the updates" href="#">-> start updates</a></li>
+                <li><a id="stopUpdates" title="stops the updates but won't  send a 'shutdown' to the server api" href="#">-> stop updates</a></li>
+                <li><a id="shutdown" title="will shutdown the entire rtf and sends a confirmation to the server api" href="#">-> shutdown rtf</a></li>
+                <li><a id="switchConnectors" title="switch the connectors, if available" href="#">-> switch connectors</a></li>
+            </ul>
+        </div>
+
+
+        <div style="float:left; margin-left:4%;">
+            <h4>State</h4>
+            <ul id="mainRTFState">
+                <li>Default Sequence: <span class="Sequence State StateInactive">null</span></li>
+                <li>Active connector type: <span class="ActiveConnector State StateInactive">null</span></li>
+                <li>Is updating: <span class="IsUpdating State StateInactive">false</span></li>
+            </ul>
+        </div>
+
+        <div class="Clear"></div>
+
+        <h4>Global events console</h4>
+        <div class="Console" style="width:50%;">global messages appended here...</div>
+    </div>
+
+
+    <div id="leftConnector">
+        <h2>
+            nextLiveMatches
+            <span class="State StateInactive">inactive</span>
+        </h2>
+
+        <h4>Parameters list</h4>
+        <ul class="List ControlList">
+            <li>null</li>
+        </ul>
+
+        <h4>Channels</h4>
+        <ul id="rightControlPanel" class="List ControlList">
+            <li><a class="addChannel" title="add the channel and starts listening to its events" href="#">+ activate channel</a></li>
+            <li><a class="removeChannel" title="remove the channel and its listeners" href="#">- deactivate channel</a></li>
+        </ul>
+
+        <h4>URL parameters</h4>
+        <ul id="rightControlPanel" class="List ControlList">
+            <li><a title="" href="#">+ add parameter</a></li>
+        </ul>
+
+        <h4>Channel events console</h4>
+        <div class="Console">console messages appended here...</div>
+    </div>
+
+
+    <div id="rightConnector">
+        <h2>
+            test channel
+            <span class="State StateInactive">inactive</span>
+        </h2>
+
+        <h4>Parameters list</h4>
+        <ul class="List ControlList">
+            <li>null</li>
+        </ul>
+
+        <h4>Channels</h4>
+        <ul id="leftControlPanel" class="List ControlList">
+            <li><a class="addChannel" title="add the channel and starts listening to its events" href="#">+ activate channel</a></li>
+            <li><a class="removeChannel" title="remove the channel and its listeners" href="#">- deactivate channel</a></li>
+        </ul>
+
+        <h4>URL parameters</h4>
+        <ul id="leftControlPanel" class="List ControlList">
+            <li><a title="" href="#">+ add parameter</a></li>
+        </ul>
+
+        <h4>Channel events console</h4>
+        <div class="Console">console messages appended here...</div>
+    </div>
+
+    <div class="Clear"></div>
+</div>
+
+
+<!-- module = common JS libs -->
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
+
+
+<script>
+    (function() {
+        var req = document.createElement('script');
+        req.type = 'text/javascript'; req.async = true;
+        req.src = 'js/lib/require.min.js?build=' + (new Date()).getTime();
+        req.setAttribute('data-main', "js/main.js");
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(req, s);
+    }());
+</script>
+
+
+</body>
+</html>

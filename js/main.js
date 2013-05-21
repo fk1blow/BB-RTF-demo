@@ -6,12 +6,13 @@ requirejs.config({
 
     "views": "app/views",
     "controllers": "app/controllers",
-    // "templates": "app/templates",
     "models": "app/models",
+    "templates": "app/templates",
 
     "skm": "http://10.0.3.98:82/SKeeM/js/lib/skm/"
   }
 });
 
 
-require(['app/application', 'lib/console-wrapper']);
+// require(['app/application', 'lib/console-wrapper']);
+require(['app/application']);

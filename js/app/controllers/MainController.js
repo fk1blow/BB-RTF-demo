@@ -44,7 +44,9 @@ var MainController = {
     this._buildViews();
     this._showDefaultSequence();
 
+
     /** global transport events */
+
     rtf.on('sequence:complete closed interrupted', function() {
       globalPanelModel.set('isUpdating', false);
       globalPanelModel.set('activeConnectorName', null);

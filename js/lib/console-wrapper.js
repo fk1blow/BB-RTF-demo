@@ -7,32 +7,14 @@
 
 // make it safe to use console.log always
 (function(b){
-	if(window.console) {
-		return;
-	}
+	if(window.console) return;
 	for(var d="assert,count,debug,dir,dirxml,error,exception,group,groupCollapsed,groupEnd,info,log,markTimeline,profile,profileEnd,time,timeEnd,trace,warn".split(","),a;a=d.pop();)b[a]=b[a] || function() {};
 })(window.console = window.console || {});
 
-window.log = (function() {
-	return {
-		info: function() {
-			if(typeof console.info === 'function')
-				return console.info.apply(console, Array.prototype.slice.call(arguments));
-		},
-		
-		debug: function() {
-			if(typeof console.info === 'function')
-				return console.log.apply(console, Array.prototype.slice.call(arguments));
-		},
-		
-		error: function() {
-			if(typeof console.info === 'function')
-				return console.error.apply(console, Array.prototype.slice.call(arguments));
-		}
-	}
-})();
 
-
-// a small shortcut but performance unsafe
+// a small shortcut for console.log
 // only for development debugging!!!
-window.cl = window.log.debug;
+if ( window.console )
+	window.cl = console.log.debug;
+else
+	window.cl = function() {};
